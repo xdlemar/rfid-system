@@ -1,50 +1,60 @@
-import PrimaryButton from '@/Components/PrimaryButton';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
+import { useForm, usePage, Head } from '@inertiajs/react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertTriangle } from 'lucide-react';
 
 export default function VerifyEmail({ status }) {
-    const { post, processing } = useForm({});
+  const { post, processing } = useForm();
+  const [resent, setResent] = useState(false);
+  const { auth } = usePage().props;
 
-    const submit = (e) => {
-        e.preventDefault();
+  const submit = (e) => {
+    e.preventDefault();
+    post(route('verification.send'), {
+      onSuccess: () => setResent(true),
+    });
+  };
 
-        post(route('verification.send'));
-    };
+  useEffect(() => {
+    if (status === 'verification-link-sent') {
+      setResent(true);
+    }
+  }, [status]);
 
-    return (
-        <GuestLayout>
-            <Head title="Email Verification" />
-
-            <div className="mb-4 text-sm text-gray-600">
-                Thanks for signing up! Before getting started, could you verify
-                your email address by clicking on the link we just emailed to
-                you? If you didn't receive the email, we will gladly send you
-                another.
+  return (
+    <>
+      <Head title="Email Verification" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 px-4">
+        <Card className="w-full max-w-md shadow-lg">
+          <CardHeader>
+            <CardTitle className="text-2xl text-center text-slate-800">
+              Verify Your Email
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            <div className="text-slate-700 text-sm flex items-start gap-2">
+              <AlertTriangle className="w-5 h-5 text-yellow-500 mt-1" />
+              <p>
+                Thanks for signing up, <strong>{auth.user.name}</strong>! Before getting started,
+                please verify your email address by clicking the link we just emailed you.
+              </p>
             </div>
 
-            {status === 'verification-link-sent' && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    A new verification link has been sent to the email address
-                    you provided during registration.
-                </div>
+            {resent && (
+              <div className="text-sm text-green-600 bg-green-100 p-2 rounded-md">
+                A new verification link has been sent to your email address.
+              </div>
             )}
 
-            <form onSubmit={submit}>
-                <div className="mt-4 flex items-center justify-between">
-                    <PrimaryButton disabled={processing}>
-                        Resend Verification Email
-                    </PrimaryButton>
-
-                    <Link
-                        href={route('logout')}
-                        method="post"
-                        as="button"
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                        Log Out
-                    </Link>
-                </div>
+            <form onSubmit={submit} className="space-y-2">
+              <Button type="submit" disabled={processing} className="w-full">
+                Resend Verification Email
+              </Button>
             </form>
-        </GuestLayout>
-    );
+          </CardContent>
+        </Card>
+      </div>
+    </>
+  );
 }
