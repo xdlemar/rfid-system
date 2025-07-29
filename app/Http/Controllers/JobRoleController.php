@@ -17,30 +17,33 @@ class JobRoleController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'RoleName' => 'required|string|max:100',
-            'Description' => 'nullable|string',
-            'SalaryRange' => 'nullable|numeric'
-        ]);
+{
+    $validated = $request->validate([
+        'RoleName' => 'required|string|max:100',
+        'Description' => 'nullable|string',
+        'SalaryRange' => 'nullable|numeric'
+    ]);
 
-        JobRole::create($validated);
-        return redirect()->back();
-    }
+    JobRole::create($validated);
 
-    public function update(Request $request, $id)
-    {
-        $jobRole = JobRole::findOrFail($id);
+    return redirect()->back()->with('success', 'Job role added successfully.');
+}
 
-        $validated = $request->validate([
-            'RoleName' => 'required|string|max:100',
-            'Description' => 'nullable|string',
-            'SalaryRange' => 'nullable|numeric'
-        ]);
+public function update(Request $request, $id)
+{
+    $jobRole = JobRole::findOrFail($id);
 
-        $jobRole->update($validated);
-        return redirect()->back();
-    }
+    $validated = $request->validate([
+        'RoleName' => 'required|string|max:100',
+        'Description' => 'nullable|string',
+        'SalaryRange' => 'nullable|numeric'
+    ]);
+
+    $jobRole->update($validated);
+
+    return redirect()->back()->with('success', 'Job role updated successfully.');
+}
+
 
     public function destroy($id)
     {

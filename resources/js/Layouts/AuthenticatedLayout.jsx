@@ -31,7 +31,7 @@ export default function AuthenticatedLayout({ user, header, children }) {
     <div className="flex min-h-screen bg-gray-100 text-gray-800">
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full z-40 shadow-md border-r bg-gray-900 text-white transition-transform duration-300 ease-in-out
+        className={`fixed top-0 left-0 h-full z-40 shadow-md border-r bg-gray-800 text-white transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} w-64`}
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-700">
