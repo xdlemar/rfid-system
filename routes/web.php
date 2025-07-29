@@ -42,7 +42,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // routes/web.php
 
-
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/employees', [EmployeeController::class, 'index'])->name('employees.index');
+    Route::post('/admin/employees', [EmployeeController::class, 'store'])->name('employees.store');
+    Route::put('/admin/employees/{id}', [EmployeeController::class, 'update'])->name('employees.update');
+    Route::delete('/admin/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/manage-employees', [EmployeeController::class, 'index'])->name('employees.index');

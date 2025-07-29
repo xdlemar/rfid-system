@@ -9,7 +9,7 @@ class JobRole extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'JobRoleID'; // Custom PK
+    protected $primaryKey = 'JobRoleID'; 
     public $incrementing = true;
     protected $keyType = 'int';
 
@@ -17,6 +17,8 @@ class JobRole extends Model
         'RoleName',
         'Description',
         'SalaryRange',
+        'DailyRate',      
+        'HourlyRate',     
     ];
 
     public function employees()

@@ -97,24 +97,29 @@ export default function ManageJobRoles({ auth, jobRoles }) {
                                     <th className="p-2 text-left">Role Name</th>
                                     <th className="p-2 text-left">Description</th>
                                     <th className="p-2 text-left">Salary Range</th>
+                                    <th className="p-2 text-left">Daily Rate</th> 
+        <th className="p-2 text-left">Hourly Rate</th> 
                                     <th className="p-2 text-left">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {jobRoles.map((role) => (
-                                    <tr key={role.JobRoleID} className="border-t">
-                                        <td className="p-2">{role.RoleName}</td>
-                                        <td className="p-2">{role.Description}</td>
-                                        <td className="p-2">₱ {Number(role.SalaryRange).toLocaleString()}</td>
-                                        <td className="p-2 whitespace-nowrap">
-                                            <div className="flex gap-2 flex-wrap">
-                                                <SecondaryButton onClick={() => openModal(role)}>Edit</SecondaryButton>
-                                                <DangerButton onClick={() => handleDelete(role.JobRoleID)}>Delete</DangerButton>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
+                           <tbody>
+    {jobRoles.map((role) => (
+        <tr key={role.JobRoleID} className="border-t">
+            <td className="p-2">{role.RoleName}</td>
+            <td className="p-2">{role.Description}</td>
+            <td className="p-2">₱ {Number(role.SalaryRange).toLocaleString()}</td>
+            <td className="p-2">₱ {Number(role.DailyRate).toFixed(2)}</td> {/* NEW */}
+            <td className="p-2">₱ {Number(role.HourlyRate).toFixed(2)}</td> {/* NEW */}
+            <td className="p-2 whitespace-nowrap">
+                <div className="flex gap-2 flex-wrap">
+                    <SecondaryButton onClick={() => openModal(role)}>Edit</SecondaryButton>
+                    <DangerButton onClick={() => handleDelete(role.JobRoleID)}>Delete</DangerButton>
+                </div>
+            </td>
+        </tr>
+    ))}
+</tbody>
+
                         </table>
                     </div>
                 </div>

@@ -17,33 +17,54 @@ class JobRoleController extends Controller
     }
 
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'RoleName' => 'required|string|max:100',
-        'Description' => 'nullable|string',
-        'SalaryRange' => 'nullable|numeric'
-    ]);
+    {
+        $validated = $request->validate([
+            'RoleName' => 'required|string|max:100',
+            'Description' => 'nullable|string',
+            'SalaryRange' => 'nullable|numeric'
+        ]);
 
-    JobRole::create($validated);
+        // Auto calculate daily and hourly rates
+        $salary = $validated['SalaryRange'] ?? 0;
+        $dailyRate = $salary / 22;
+        $hourlyRate = $dailyRate / 8;
 
-    return redirect()->back()->with('success', 'Job role added successfully.');
-}
+        JobRole::create([
+            'RoleName' => $validated['RoleName'],
+            'Description' => $validated['Description'] ?? null,
+            'SalaryRange' => $salary,
+            'DailyRate' => round($dailyRate, 2),
+            'HourlyRate' => round($hourlyRate, 2),
+        ]);
 
-public function update(Request $request, $id)
-{
-    $jobRole = JobRole::findOrFail($id);
+        return redirect()->back()->with('success', 'Job role added successfully.');
+    }
 
-    $validated = $request->validate([
-        'RoleName' => 'required|string|max:100',
-        'Description' => 'nullable|string',
-        'SalaryRange' => 'nullable|numeric'
-    ]);
+    public function update(Request $request, $id)
+    {
+        $jobRole = JobRole::findOrFail($id);
 
-    $jobRole->update($validated);
+        $validated = $request->validate([
+            'RoleName' => 'required|string|max:100',
+            'Description' => 'nullable|string',
+            'SalaryRange' => 'nullable|numeric'
+        ]);
 
-    return redirect()->back()->with('success', 'Job role updated successfully.');
-}
+        // Auto calculate daily and hourly rates
+        $salary = $validated['SalaryRange'] ?? 0;
+        $dailyRate = $salary / 22;
+        $hourlyRate = $dailyRate / 8;
 
+        $jobRole->update([
+            'RoleName' => $validated['RoleName'],
+            'Description' => $validated['Description'] ?? null,
+            'SalaryRange' => $salary,
+            'DailyRate' => round($dailyRate, 2),
+            'HourlyRate' => round($hourlyRate, 2),
+        ]);
+
+        return redirect()->back()->with('success', 'Job role updated successfully.');
+    }
 
     public function destroy($id)
     {
